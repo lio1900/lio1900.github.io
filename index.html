@@ -90,6 +90,29 @@
       color: #fff;
     }
 
+    /* 🔹 소개 부분 */
+    #intro {
+      text-align: center;
+    }
+
+    #intro img {
+      width: 160px;
+      height: 160px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-bottom: 30px;
+      box-shadow: 0 0 20px rgba(255,255,255,0.1);
+      border: 2px solid rgba(255,255,255,0.2);
+    }
+
+    #intro p {
+      line-height: 1.9;
+      font-size: 1.25rem;
+      color: #ccc;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
     p { line-height: 1.6; font-size: 1rem; color: #ccc; }
 
     .skills, .projects, .contact { display: grid; gap: 24px; }
@@ -119,9 +142,10 @@
 
   <!-- Portfolio sections -->
   <section id="intro">
+    <img src="image/썸네일.png" alt="프로필 이미지">
     <h2>소개</h2>
-    <p>안녕하세요 👋 저는 <strong>디노(Dino)</strong>입니다.  
-      AI 자동화, 교육 설계, 그리고 창의적 코드 실험을 통해  
+    <p>안녕하세요 👋 저는 <strong>디노(Dino)</strong>입니다.<br>
+      AI 자동화, 교육 설계, 그리고 창의적 코드 실험을 통해<br>
       <em>사람이 더 의미 있는 일에 집중할 수 있는 세상</em>을 만듭니다.
     </p>
   </section>
@@ -179,38 +203,25 @@
       const maxorbit = 255;
       const centery = ch / 2;
       const centerx = cw / 2;
-
       const startTime = new Date().getTime();
       let currentTime = 0;
-
       const stars = [];
-      let collapse = false;
-      let expanse = false;
-      let returning = false;
 
       const canvas = document.createElement('canvas');
-      canvas.width = cw;
-      canvas.height = ch;
+      canvas.width = cw; canvas.height = ch;
       container.appendChild(canvas);
       const context = canvas.getContext("2d");
       context.globalCompositeOperation = "multiply";
 
       class Star {
         constructor() {
-          const rands = [];
-          rands.push(Math.random() * (maxorbit / 2) + 1);
-          rands.push(Math.random() * (maxorbit / 2) + maxorbit);
+          const rands = [Math.random() * (maxorbit / 2) + 1, Math.random() * (maxorbit / 2) + maxorbit];
           this.orbital = (rands.reduce((p, c) => p + c, 0) / rands.length);
           this.x = centerx;
           this.y = centery + this.orbital;
-          this.yOrigin = centery + this.orbital;
           this.speed = (Math.floor(Math.random() * 2.5) + 1.5) * Math.PI / 180;
           this.startRotation = (Math.floor(Math.random() * 360) + 1) * Math.PI / 180;
-          this.rotation = 0;
-          this.id = stars.length;
           this.color = 'rgba(255,255,255,' + (1 - ((this.orbital) / 255)) + ')';
-          this.hoverPos = centery + (maxorbit / 2);
-          this.expansePos = centery + (this.id % 100) * -10;
           stars.push(this);
         }
         draw() {
@@ -247,7 +258,6 @@
 
     document.addEventListener('DOMContentLoaded', () => { blackhole('#blackhole'); });
 
-    /* Fade-in animation on scroll */
     window.addEventListener('scroll', () => {
       document.querySelectorAll('section').forEach(sec => {
         const rect = sec.getBoundingClientRect();
