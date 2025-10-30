@@ -6,132 +6,36 @@
   <title>Black Hole Portfolio | 디노</title>
   <style>
     html, body { height: 100%; margin: 0; padding: 0; font-family: 'Inter', sans-serif; color: #ddd; }
-    body {
-      background-color: rgba(25,25,25,1);
-      overflow-x: hidden;
-      overflow-y: auto;
-      scroll-behavior: smooth;
-    }
+    body { background-color: #191919; overflow-x: hidden; overflow-y: auto; scroll-behavior: smooth; }
 
-    /* ====== Black Hole Section ====== */
-    #blackhole {
-      height: 100vh;
-      width: 100%;
-      position: relative;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
+    /* ===== Black Hole ===== */
+    #blackhole { height: 100vh; width: 100%; position: relative; display: flex; justify-content: center; align-items: center; }
+    .centerHover { width:255px; height:255px; border-radius:50%; position:absolute; z-index:2; cursor:pointer; line-height:255px; text-align:center; transition:all 500ms; }
+    .centerHover.open { opacity:0; pointer-events:none; }
+    .centerHover:hover span { color:#DDD; }
+    .centerHover span { color:#666; font-family:serif; font-size:18px; position:relative; transition:all 500ms; }
+    .centerHover span:before,.centerHover span:after{content:'';display:inline-block;height:1px;width:16px;margin:0 12px 4px;background:#666;transition:all 500ms;}
+    canvas { position: relative; z-index: 1; width: 100%; height: 100%; display: block; }
 
-    .centerHover {
-      width: 255px;
-      height: 255px;
-      background-color: transparent;
-      border-radius: 50%;
-      position: absolute;
-      z-index: 2;
-      cursor: pointer;
-      line-height: 255px;
-      text-align: center;
-      transition: all 500ms;
-    }
+    /* ===== Portfolio ===== */
+    section { max-width: 960px; margin: 0 auto; padding: 80px 20px; opacity: 0; transform: translateY(40px); transition: all 1s ease-out; }
+    section.visible { opacity: 1; transform: translateY(0); }
+    h2 { font-size: 2.1em; border-left: 4px solid #999; padding-left: 10px; margin-bottom: 20px; color: #fff; }
 
-    .centerHover.open { opacity: 0; pointer-events: none; }
-
-    .centerHover:hover span { color: #DDD; }
-    .centerHover:hover span:before, .centerHover:hover span:after { background-color: #DDD; }
-
-    .centerHover span {
-      color: #666;
-      font-family: serif;
-      font-size: 18px;
-      position: relative;
-      transition: all 500ms;
-    }
-
-    .centerHover span:before, .centerHover span:after {
-      content: '';
-      display: inline-block;
-      height: 1px;
-      width: 16px;
-      margin: 0 12px 4px 12px;
-      background-color: #666;
-      transition: all 500ms;
-    }
-
-    canvas {
-      position: relative;
-      z-index: 1;
-      width: 100%;
-      height: 100%;
-      display: block;
-    }
-
-    /* ====== Portfolio Section ====== */
-    section {
-      max-width: 960px;
-      margin: 0 auto;
-      padding: 80px 20px;
-      opacity: 0;
-      transform: translateY(40px);
-      transition: all 1s ease-out;
-    }
-
-    section.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    h2 {
-      font-size: 2em;
-      border-left: 4px solid #999;
-      padding-left: 10px;
-      margin-bottom: 20px;
-      color: #fff;
-    }
-
-    /* 🔹 소개 부분 */
-    #intro {
-      text-align: center;
-    }
-
+    /* 소개 + 프로필 */
+    #intro { text-align: center; }
     #intro img {
-      width: 160px;
-      height: 160px;
-      border-radius: 50%;
-      object-fit: cover;
-      margin-bottom: 30px;
-      box-shadow: 0 0 20px rgba(255,255,255,0.1);
-      border: 2px solid rgba(255,255,255,0.2);
+      width: 160px; height: 160px; border-radius: 50%; object-fit: cover; margin-bottom: 30px;
+      box-shadow: 0 0 20px rgba(255,255,255,0.1); border: 2px solid rgba(255,255,255,0.2);
+      background: radial-gradient(transparent 60%, rgba(255,255,255,0.12));
     }
-
-    #intro p {
-      line-height: 1.9;
-      font-size: 1.25rem;
-      color: #ccc;
-      max-width: 700px;
-      margin: 0 auto;
-    }
+    #intro p { line-height: 1.9; font-size: 1.25rem; color: #ccc; max-width: 700px; margin: 0 auto; }
 
     p { line-height: 1.6; font-size: 1rem; color: #ccc; }
-
-    .skills, .projects, .contact { display: grid; gap: 24px; }
-
-    .skills div, .projects div {
-      background: rgba(255,255,255,0.05);
-      padding: 20px;
-      border-radius: 12px;
-      box-shadow: 0 0 20px rgba(255,255,255,0.05);
-      transition: transform 0.3s ease;
-    }
-    .skills div:hover, .projects div:hover { transform: translateY(-6px); }
-
-    footer {
-      text-align: center;
-      padding: 40px;
-      color: #777;
-      font-size: 0.9em;
-    }
+    .skills,.projects,.contact { display: grid; gap: 24px; }
+    .skills div,.projects div { background: rgba(255,255,255,0.05); padding: 20px; border-radius: 12px; box-shadow: 0 0 20px rgba(255,255,255,0.05); transition: transform .3s ease; }
+    .skills div:hover,.projects div:hover { transform: translateY(-6px); }
+    footer { text-align: center; padding: 40px; color: #777; font-size: 0.9em; }
   </style>
 </head>
 <body>
@@ -142,7 +46,8 @@
 
   <!-- Portfolio sections -->
   <section id="intro">
-    <img src="image/썸네일.png" alt="프로필 이미지">
+    <!-- ✅ 정확한 경로: image/썸네일.png -->
+    <img id="profileImg" src="image/썸네일.png" alt="프로필 이미지">
     <h2>소개</h2>
     <p>안녕하세요 👋 저는 <strong>디노(Dino)</strong>입니다.<br>
       AI 자동화, 교육 설계, 그리고 창의적 코드 실험을 통해<br>
@@ -165,18 +70,15 @@
     <div class="projects">
       <div>
         <h3>🧠 AI 자동화 챌린지</h3>
-        <p>직장인 대상 GPT + Apps Script 실습형 챌린지 운영.<br>
-        4주 만에 ‘반복 업무 자동화’를 실현하는 교육 콘텐츠 제작.</p>
+        <p>직장인 대상 GPT + Apps Script 실습형 챌린지 운영.<br>4주 만에 반복 업무 자동화 달성.</p>
       </div>
       <div>
         <h3>🌐 VibeCoding Community</h3>
-        <p>AI와 코드를 통해 ‘나만의 자동화’를 구현하는 커뮤니티 플랫폼.<br>
-        GitHub Pages와 노션 기반 학습 공간 구성.</p>
+        <p>‘나만의 자동화’를 구현하는 커뮤니티 플랫폼.<br>GitHub Pages/노션 기반 학습 공간.</p>
       </div>
       <div>
         <h3>📊 AI 교육 워크숍</h3>
-        <p>기업 맞춤형 DX → AX 실무 교육 기획 및 강의.<br>
-        생성형 AI 도구를 실무에 적용하는 실습형 과정 설계.</p>
+        <p>기업 맞춤형 DX → AX 실무 교육 기획/강의.<br>생성형 AI의 실무 적용 설계.</p>
       </div>
     </div>
   </section>
@@ -193,77 +95,29 @@
   <footer>© 2025 Dino | VibeCoding Portfolio</footer>
 
   <script>
-    /* === Blackhole effect === */
-    function blackhole(element) {
-      const container = document.querySelector(element);
-      const h = container.offsetHeight;
-      const w = container.offsetWidth;
-      const cw = w;
-      const ch = h;
-      const maxorbit = 255;
-      const centery = ch / 2;
-      const centerx = cw / 2;
-      const startTime = new Date().getTime();
-      let currentTime = 0;
-      const stars = [];
+    /* ===== 이미지 로드 폴백: 한글 파일명 인코딩 이슈 대비 ===== */
+    (function ensureProfileImage(){
+      const img = document.getElementById('profileImg');
+      let triedEncoded = false, triedFallback = false;
 
-      const canvas = document.createElement('canvas');
-      canvas.width = cw; canvas.height = ch;
-      container.appendChild(canvas);
-      const context = canvas.getContext("2d");
-      context.globalCompositeOperation = "multiply";
-
-      class Star {
-        constructor() {
-          const rands = [Math.random() * (maxorbit / 2) + 1, Math.random() * (maxorbit / 2) + maxorbit];
-          this.orbital = (rands.reduce((p, c) => p + c, 0) / rands.length);
-          this.x = centerx;
-          this.y = centery + this.orbital;
-          this.speed = (Math.floor(Math.random() * 2.5) + 1.5) * Math.PI / 180;
-          this.startRotation = (Math.floor(Math.random() * 360) + 1) * Math.PI / 180;
-          this.color = 'rgba(255,255,255,' + (1 - ((this.orbital) / 255)) + ')';
-          stars.push(this);
+      img.addEventListener('error', () => {
+        if (!triedEncoded) {
+          triedEncoded = true;
+          // 퍼센트 인코딩 경로 시도
+          img.src = "image/%EC%8D%B8%EB%84%A4%EC%9D%BC.png";
+          return;
         }
-        draw() {
-          this.rotation = this.startRotation + (currentTime * this.speed);
-          const cos = Math.cos(this.rotation), sin = Math.sin(this.rotation);
-          const x = centerx + cos * this.orbital;
-          const y = centery + sin * this.orbital;
-          context.beginPath();
-          context.strokeStyle = this.color;
-          context.moveTo(x, y);
-          context.lineTo(x + 1, y + 1);
-          context.stroke();
+        if (!triedFallback) {
+          triedFallback = true;
+          // 마지막 폴백: SVG 데이터(회색 원 + D 이니셜)
+          const svg =
+            `<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'>
+               <defs>
+                 <radialGradient id='g' cx='50%' cy='50%'><stop offset='60%' stop-color='transparent'/><stop offset='100%' stop-color='rgba(255,255,255,0.12)'/></radialGradient>
+               </defs>
+               <circle cx='80' cy='80' r='78' fill='#222' stroke='rgba(255,255,255,0.2)' stroke-width='2'/>
+               <text x='50%' y='54%' text-anchor='middle' font-family='Inter,Arial' font-size='64' fill='#888' dy='.3em'>D</text>
+             </svg>`;
+          img.src = "data:image/svg+xml;utf8," + encodeURIComponent(svg);
         }
       }
-
-      function loop() {
-        const now = new Date().getTime();
-        currentTime = (now - startTime) / 50;
-        context.fillStyle = 'rgba(25,25,25,0.2)';
-        context.fillRect(0, 0, cw, ch);
-        stars.forEach(s => s.draw());
-        requestAnimationFrame(loop);
-      }
-
-      for (let i = 0; i < 2000; i++) new Star();
-      loop();
-
-      const centerHover = document.querySelector('.centerHover');
-      centerHover.addEventListener('click', () => {
-        document.querySelectorAll("section").forEach(sec => sec.classList.add("visible"));
-        window.scrollTo({ top: window.innerHeight, behavior: 'smooth' });
-      });
-    }
-
-    document.addEventListener('DOMContentLoaded', () => { blackhole('#blackhole'); });
-
-    window.addEventListener('scroll', () => {
-      document.querySelectorAll('section').forEach(sec => {
-        const rect = sec.getBoundingClientRect();
-        if (rect.top < window.innerHeight - 100) sec.classList.add('visible');
-      });
-    });
-  </script>
-</body>
-</html>
