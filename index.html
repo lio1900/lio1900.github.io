@@ -3,87 +3,112 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dino Motion Portfolio</title>
+  <title>Dino Portfolio</title>
   <style>
-    html,body {margin:0;padding:0;overflow:hidden;background:repeating-conic-gradient(#ccc 0% 25%,#fff 0% 50%) 0 0 / 16px 16px;font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial;}
-    h1 {position:fixed;top:0;left:0;padding:1em;margin:1em;background:#fffb;backdrop-filter:blur(2px);z-index:10;font-size:20px;font-weight:600;border-radius:12px;}
-    h1 a {text-decoration:none;color:#111;}
-    canvas {display:block;width:100%;height:100vh;cursor:grab;}
-  </style>
-
-  <script type='importmap'>
-    {
-      "imports": {
-        "three": "https://unpkg.com/three@~0.181/build/three.webgpu.js",
-        "three/webgpu": "https://unpkg.com/three@~0.181/build/three.webgpu.js",
-        "three/addons/": "https://unpkg.com/three@~0.181/examples/jsm/",
-        "YCW_tsl_x": "https://cdn.jsdelivr.net/gh/ycw/tsl-x@5f97a5e8d753d16cefa5ab01036475a92ee51bfd/src/index.js",
-        "three/tsl": "https://unpkg.com/three@~0.181/build/three.tsl.js"
-      }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #ffffff;
+      color: #111;
+      line-height: 1.6;
     }
-  </script>
+
+    header {
+      padding: 60px 20px;
+      text-align: center;
+    }
+
+    header h1 {
+      font-size: 2.4rem;
+      margin-bottom: 10px;
+      font-weight: 700;
+    }
+
+    header p {
+      font-size: 1.1rem;
+      color: #555;
+    }
+
+    .section {
+      max-width: 860px;
+      margin: 60px auto;
+      padding: 0 20px;
+    }
+
+    .section h2 {
+      font-size: 1.6rem;
+      margin-bottom: 20px;
+      font-weight: 600;
+    }
+
+    .section p {
+      font-size: 1rem;
+      color: #333;
+      margin-bottom: 20px;
+    }
+
+    .image-block {
+      width: 100%;
+      margin: 40px 0;
+      display: flex;
+      justify-content: center;
+    }
+
+    .image-block img {
+      max-width: 100%;
+      border-radius: 10px;
+    }
+
+    footer {
+      text-align: center;
+      padding: 40px 0;
+      font-size: 0.9rem;
+      color: #777;
+    }
+  </style>
 </head>
 <body>
+  <header>
+    <h1>Dino's Portfolio</h1>
+    <p>Minimal & Clear — Focused on Work and Impact</p>
+  </header>
 
-<h1><a href='https://x.com/ycwhk' target='_top'>motionblur</a></h1>
+  <section class="section">
+    <h2>소개</h2>
+    <p>
+      안녕하세요, 디노입니다. AI 교육 운영, 자동화 구축, VibeCoding 기반 워크플로우 설계에
+      집중하고 있습니다. 다양한 프로젝트와 시스템을 만들어온 흐름을 이 포트폴리오에서
+      정리했습니다.
+    </p>
+  </section>
 
-<script type="module">
-  import * as THREE from 'three/webgpu'
-  import { TSL as $ } from 'three/webgpu'
-  import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
-  import { GUI } from 'three/addons/libs/lil-gui.module.min.js'
-  import { motionBlur } from 'three/addons/tsl/display/MotionBlur.js'
-  import * as $$ from 'YCW_tsl_x'
+  <section class="section">
+    <h2>프로젝트</h2>
+    <p>
+      아래는 제가 진행한 주요 프로젝트들입니다. 각 프로젝트는 실무 문제 해결, 자동화,
+      사용자 경험 개선에 집중되어 있습니다.
+    </p>
 
-  const gui = new GUI()
-  const renderer = await new THREE.WebGPURenderer().init()
-  const scene = new THREE.Scene()
-  const camera = new THREE.PerspectiveCamera()
-  const controls = new OrbitControls(camera, renderer.domElement)
+    <div class="image-block">
+      <img src="YOUR_IMAGE_URL_HERE" alt="프로젝트 이미지" />
+    </div>
 
-  camera.position.set(2, 2, 2)
-  controls.enableDamping = true
+    <p>
+      프로젝트 설명 텍스트. 스크립트 자동화, Slack·Notion 통합, AI 흐름 설계 등 자유롭게
+      이어서 넣으면 됩니다.
+    </p>
+  </section>
 
-  scene.add(new THREE.PointLight('white', 2, 2, 2))
-  scene.add(new THREE.HemisphereLight('skyblue', 'brown', 3))
+  <section class="section">
+    <h2>연락하기</h2>
+    <p>
+      이메일: your_email@example.com <br />
+      GitHub: https://github.com/your-id
+    </p>
+  </section>
 
-  const mat = new THREE.MeshLambertMaterial({ side: THREE.DoubleSide })
-  scene.add(new THREE.Mesh(new THREE.PlaneGeometry(3, 3, 20, 20).rotateX(-Math.PI / 2), mat))
-
-  const height_fn = (p) => $.mx_noise_float(p.mul(3).add($.time.mul(2)), 0.5)
-  const p = $.uv()
-  mat.positionNode = $.positionLocal.add($.vec3(0, height_fn(p), 0))
-  mat.normalNode = $$.bump_field2d(height_fn, p)
-  mat.colorNode = $.uv().x.mul(5).fract().step(0.1).rrr
-
-  const pp = new THREE.PostProcessing(renderer)
-  {
-    const displacement_scale = $.uniform(16)
-    const motionblur_samples = $.uniform(16)
-    const pass = $.pass(scene, camera)
-    pass.setMRT($.mrt({ output: $.output }))
-    const displacement = $$.ndc_displacement2d(pass).mul(displacement_scale)
-    const output = pass.getTextureNode('output')
-    pp.outputNode = motionBlur(output, displacement, motionblur_samples)
-    gui.add(displacement_scale, 'value', 0, 100, 1).name('displacement_scale')
-    gui.add(motionblur_samples, 'value', 1, 100, 1).name('motionblur_samples')
-  }
-
-  renderer.setAnimationLoop(() => {
-    controls.update()
-    pp.render()
-  })
-
-  addEventListener('resize', () => {
-    renderer.setPixelRatio(devicePixelRatio)
-    renderer.setSize(innerWidth, innerHeight, false)
-    camera.aspect = innerWidth / innerHeight
-    camera.updateProjectionMatrix()
-  })
-  dispatchEvent(new Event('resize'))
-
-  document.body.prepend(renderer.domElement)
-</script>
-
+  <footer>
+    © 2025 Dino — All Rights Reserved
+  </footer>
 </body>
 </html>
