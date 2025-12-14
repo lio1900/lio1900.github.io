@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>포트폴리오 | Portfolio</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #000;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* 3D Sphere Canvas */
+        #stage {
+            position: fixed;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1;
+            pointer-events: all;
+            scale: 0.5 0.5;
+            transform-origin: center center;
+        }
+
+        /* 헤더 */
+        header {
+            position: relative;
+            z-index: 2;
+            background: transparent;
+            color: white;
+            padding: 150px 0 100px 0;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+        }
+
+        header p {
+            font-size: 1.3em;
+            opacity: 0.9;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+        }
+
+        /* 프로필 이미지 */
+        .profile-img {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            margin: 0 auto 30px;
+            border: 5px solid white;
+            background-color: #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            color: #666;
+            overflow: hidden;
+            position: relative;
+            z-index: 2;
+        }
+
+        .profile-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* 섹션 공통 스타일 */
+        section {
+            position: relative;
+            z-index: 2;
+            padding: 80px 0;
+            background-color: white;
+            margin-bottom: 2px;
+        }
+
+        section:nth-child(even) {
+            background-color: #fafafa;
+        }
+
+        section h2 {
+            text-align: center;
+            font-size: 2.5em;
+            margin-bottom: 50px;
+            color: #667eea;
+        }
+
+        /* 소개 섹션 */
+        .about-content {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .about-content p {
+            font-size: 1.1em;
+            margin-bottom: 20px;
+            line-height: 1.8;
+        }
+
+        /* 기술 스택 섹션 */
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .skill-category {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .skill-category:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+        }
+
+        .skill-category h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .skill-category ul {
+            list-style: none;
+        }
+
+        .skill-category li {
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .skill-category li:last-child {
+            border-bottom: none;
+        }
+
+        /* 프로젝트 섹션 */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+        }
+
+        .project-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .project-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+        }
+
+        .project-img {
+            width: 100%;
+            height: 220px;
+            background-color: #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            font-size: 14px;
+            overflow: hidden;
+        }
+
+        .project-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .project-content {
+            padding: 25px;
+        }
+
+        .project-content h3 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 1.5em;
+        }
+
+        .project-content p {
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .project-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .tag {
+            background-color: #667eea;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.85em;
+        }
+
+        .project-links {
+            display: flex;
+            gap: 10px;
+        }
+
+        .project-links a {
+            padding: 8px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 0.9em;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-demo {
+            background-color: #667eea;
+            color: white;
+        }
+
+        .btn-demo:hover {
+            background-color: #5568d3;
+        }
+
+        .btn-github {
+            background-color: #333;
+            color: white;
+        }
+
+        .btn-github:hover {
+            background-color: #000;
+        }
+
+        /* 연락처 섹션 */
+        .contact-content {
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            font-size: 1.1em;
+        }
+
+        .contact-item a {
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        .contact-item a:hover {
+            text-decoration: underline;
+        }
+
+        /* 푸터 */
+        footer {
+            position: relative;
+            z-index: 2;
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 30px 0;
+        }
+
+        /* 반응형 */
+        @media (max-width: 768px) {
+            #stage {
+                scale: 0.3 0.3;
+            }
+
+            header h1 {
+                font-size: 2em;
+            }
+
+            header p {
+                font-size: 1.1em;
+            }
+
+            section h2 {
+                font-size: 2em;
+            }
+
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .skills-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 3D Sphere Canvas -->
+    <canvas id="stage" width="1200" height="1200"></canvas>
+
+    <!-- 헤더 -->
+    <header>
+        <div class="container">
+            <div class="profile-img">
+                <!-- 프로필 이미지를 넣으세요 -->
+                <!-- <img src="images/profile.jpg" alt="프로필 사진"> -->
+                프로필 이미지
+            </div>
+            <h1>홍길동</h1>
+            <p>Web Developer | Frontend Specialist</p>
+        </div>
+    </header>
+
+    <!-- 소개 섹션 -->
+    <section id="about">
+        <div class="container">
+            <h2>소개</h2>
+            <div class="about-content">
+                <p>
+                    안녕하세요. 사용자 경험을 최우선으로 생각하는 웹 개발자 홍길동입니다.
+                </p>
+                <p>
+                    깔끔한 코드와 직관적인 UI/UX를 통해 사용자에게 가치를 전달하는 것을 목표로 하고 있습니다.
+                    새로운 기술을 배우는 것을 즐기며, 팀과의 협업을 통해 더 나은 결과물을 만들어내는 것에 열정을 가지고 있습니다.
+                </p>
+                <p>
+                    끊임없이 성장하며, 문제 해결을 위한 최선의 방법을 찾아가는 개발자가 되겠습니다.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 기술 스택 섹션 -->
+    <section id="skills">
+        <div class="container">
+            <h2>기술 스택</h2>
+            <div class="skills-grid">
+                <div class="skill-category">
+                    <h3>Frontend</h3>
+                    <ul>
+                        <li>HTML5 / CSS3</li>
+                        <li>JavaScript (ES6+)</li>
+                        <li>React.js</li>
+                        <li>Vue.js</li>
+                        <li>Responsive Web Design</li>
+                    </ul>
+                </div>
+                <div class="skill-category">
+                    <h3>Backend</h3>
+                    <ul>
+                        <li>Node.js</li>
+                        <li>Express.js</li>
+                        <li>Python</li>
+                        <li>Django / Flask</li>
+                        <li>RESTful API</li>
+                    </ul>
+                </div>
+                <div class="skill-category">
+                    <h3>Database & Tools</h3>
+                    <ul>
+                        <li>MySQL / PostgreSQL</li>
+                        <li>MongoDB</li>
+                        <li>Git / GitHub</li>
+                        <li>Docker</li>
+                        <li>AWS (EC2, S3)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 프로젝트 섹션 -->
+    <section id="projects">
+        <div class="container">
+            <h2>프로젝트</h2>
+            <div class="projects-grid">
+                <!-- 프로젝트 1 -->
+                <div class="project-card">
+                    <div class="project-img">
+                        <!-- 프로젝트 이미지를 넣으세요 -->
+                        <!-- <img src="images/project1.jpg" alt="프로젝트 1"> -->
+                        프로젝트 이미지 1
+                    </div>
+                    <div class="project-content">
+                        <h3>쇼핑몰 웹사이트</h3>
+                        <p>React와 Node.js를 활용한 풀스택 전자상거래 플랫폼입니다. 사용자 인증, 장바구니, 결제 시스템을 구현했습니다.</p>
+                        <div class="project-tags">
+                            <span class="tag">React</span>
+                            <span class="tag">Node.js</span>
+                            <span class="tag">MongoDB</span>
+                            <span class="tag">Express</span>
+                        </div>
+                        <div class="project-links">
+                            <a href="#" class="btn-demo">데모 보기</a>
+                            <a href="#" class="btn-github">GitHub</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 프로젝트 2 -->
+                <div class="project-card">
+                    <div class="project-img">
+                        <!-- 프로젝트 이미지를 넣으세요 -->
+                        <!-- <img src="images/project2.jpg" alt="프로젝트 2"> -->
+                        프로젝트 이미지 2
+                    </div>
+                    <div class="project-content">
+                        <h3>날씨 정보 앱</h3>
+                        <p>OpenWeather API를 활용한 실시간 날씨 정보 제공 웹 애플리케이션입니다. 위치 기반 서비스와 5일 예보 기능을 제공합니다.</p>
+                        <div class="project-tags">
+                            <span class="tag">JavaScript</span>
+                            <span class="tag">API</span>
+                            <span class="tag">HTML/CSS</span>
+                        </div>
+                        <div class="project-links">
+                            <a href="#" class="btn-demo">데모 보기</a>
+                            <a href="#" class="btn-github">GitHub</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 프로젝트 3 -->
+                <div class="project-card">
+                    <div class="project-img">
+                        <!-- 프로젝트 이미지를 넣으세요 -->
+                        <!-- <img src="images/project3.jpg" alt="프로젝트 3"> -->
+                        프로젝트 이미지 3
+                    </div>
+                    <div class="project-content">
+                        <h3>포트폴리오 웹사이트</h3>
+                        <p>개인 프로젝트와 기술 스택을 소개하는 반응형 포트폴리오 웹사이트입니다. GitHub Pages를 통해 배포했습니다.</p>
+                        <div class="project-tags">
+                            <span class="tag">HTML5</span>
+                            <span class="tag">CSS3</span>
+                            <span class="tag">JavaScript</span>
+                            <span class="tag">Responsive</span>
+                        </div>
+                        <div class="project-links">
+                            <a href="#" class="btn-demo">데모 보기</a>
+                            <a href="#" class="btn-github">GitHub</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 연락처 섹션 -->
+    <section id="contact">
+        <div class="container">
+            <h2>연락처</h2>
+            <div class="contact-content">
+                <p>프로젝트 협업이나 문의사항이 있으시면 언제든지 연락주세요!</p>
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <strong>📧 Email:</strong>
+                        <a href="mailto:your.email@example.com">your.email@example.com</a>
+                    </div>
+                    <div class="contact-item">
+                        <strong>💼 GitHub:</strong>
+                        <a href="https://github.com/yourusername" target="_blank">github.com/yourusername</a>
+                    </div>
+                    <div class="contact-item">
+                        <strong>💬 Blog:</strong>
+                        <a href="https://yourblog.com" target="_blank">yourblog.com</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 푸터 -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 홍길동. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- 3D Sphere Script -->
+    <script>
+        const canvas = document.getElementById("stage");
+        const ctx = canvas.getContext("2d");
+
+        const bufferCanvas = document.createElement("canvas");
+        bufferCanvas.width = 1200;
+        bufferCanvas.height = 1200;
+        const bufferCtx = bufferCanvas.getContext("2d");
+
+        const squareNum = 1000;
+        const stageWidth = 1200;
+        const stageHeight = 1200;
+        const hw = stageWidth / 2;
+        const hh = stageHeight / 2;
+
+        const baseVerts = [-40, 0, 0, 40, 0, 0, 40, 0, 80, -40, 0, 80, -40, 0, 0];
+
+        let newVerts = [];
+        const radius = 400;
+
+        let dx = 0;
+        let dy = 0;
+        let mouseX = 0;
+        let mouseY = 0;
+
+        canvas.addEventListener("mousemove", (e) => {
+            const rect = canvas.getBoundingClientRect();
+            mouseX = e.clientX - rect.left;
+            mouseY = e.clientY - rect.top;
+        });
+
+        class Matrix3D {
+            constructor() {
+                this.identity();
+            }
+
+            identity() {
+                this.d = [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1];
+            }
+
+            appendScale(x, y, z) {
+                this.append([x, 0, 0, 0, 0, y, 0, 0, 0, 0, z, 0, 0, 0, 0, 1]);
+            }
+
+            appendTranslation(x, y, z) {
+                this.append([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, x, y, z, 1]);
+            }
+
+            appendRotation(deg, axis) {
+                const rad = (deg * Math.PI) / 180;
+                const c = Math.cos(rad);
+                const s = Math.sin(rad);
+                let m = [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1];
+
+                if (axis === "X") {
+                    m[5] = c;
+                    m[6] = s;
+                    m[9] = -s;
+                    m[10] = c;
+                } else if (axis === "Y") {
+                    m[0] = c;
+                    m[2] = -s;
+                    m[8] = s;
+                    m[10] = c;
+                } else if (axis === "Z") {
+                    m[0] = c;
+                    m[1] = s;
+                    m[4] = -s;
+                    m[5] = c;
+                }
+                this.append(m);
+            }
+
+            append(b) {
+                const a = this.d;
+                const out = [];
+                for (let i = 0; i < 4; i++) {
+                    for (let j = 0; j < 4; j++) {
+                        let sum = 0;
+                        for (let k = 0; k < 4; k++) {
+                            sum += a[i * 4 + k] * b[k * 4 + j];
+                        }
+                        out[i * 4 + j] = sum;
+                    }
+                }
+                this.d = out;
+            }
+
+            transformVectors(inVerts, outVerts) {
+                const m = this.d;
+                for (let i = 0; i < inVerts.length; i += 3) {
+                    const x = inVerts[i];
+                    const y = inVerts[i + 1];
+                    const z = inVerts[i + 2];
+
+                    outVerts.push(
+                        x * m[0] + y * m[4] + z * m[8] + m[12],
+                        x * m[1] + y * m[5] + z * m[9] + m[13],
+                        x * m[2] + y * m[6] + z * m[10] + m[14]
+                    );
+                }
+            }
+        }
+
+        const m = new Matrix3D();
+
+        for (let i = 0; i < squareNum; i++) {
+            m.identity();
+            const s = Math.random() * 0.5 + 0.5;
+            m.appendScale(s, s, s);
+            m.appendRotation(90, "X");
+            m.appendTranslation(0, 0, radius);
+            m.appendRotation(Math.random() * 360, "X");
+            m.appendRotation(Math.random() * 360, "Y");
+            m.appendRotation(Math.random() * 360, "Z");
+
+            m.transformVectors(baseVerts, newVerts);
+        }
+
+        let down;
+
+        onpointerdown = (e) => {
+            down = true;
+        };
+        onpointerup = (e) => {
+            down = false;
+        };
+
+        let ox = (oy = 0);
+
+        function onLoop() {
+            dx += (mouseX + ox - dx) / 14;
+            dy += (mouseY + oy - dy) / 14;
+
+            if (!down) {
+                ox += 0.3;
+                oy += 0.3;
+            }
+
+            m.identity();
+            m.appendRotation(dx, "Z");
+            m.appendRotation(dy, "X");
+            m.appendTranslation(hw, hh, 0);
+
+            const mat = m.d;
+            const pVerts = [];
+
+            for (let i = 0; i < newVerts.length; i += 3) {
+                const x = newVerts[i];
+                const y = newVerts[i + 1];
+                const z = newVerts[i + 2];
+
+                const vx = x * mat[0] + y * mat[4] + z * mat[8] + mat[12];
+                const vy = x * mat[1] + y * mat[5] + z * mat[9] + mat[13];
+
+                pVerts.push(vx, vy);
+            }
+
+            bufferCtx.clearRect(0, 0, stageWidth, stageHeight);
+
+            bufferCtx.fillStyle = "#FFFFFF";
+            bufferCtx.beginPath();
+            bufferCtx.arc(hw, hh, radius + 20, 0, Math.PI * 2);
+            bufferCtx.fill();
+
+            bufferCtx.fillStyle = "#000000";
+            bufferCtx.beginPath();
+
+            for (let i = 0; i < pVerts.length; i += 10) {
+                bufferCtx.moveTo(pVerts[i], pVerts[i + 1]);
+                bufferCtx.lineTo(pVerts[i + 2], pVerts[i + 3]);
+                bufferCtx.lineTo(pVerts[i + 4], pVerts[i + 5]);
+                bufferCtx.lineTo(pVerts[i + 6], pVerts[i + 7]);
+                bufferCtx.lineTo(pVerts[i + 8], pVerts[i + 9]);
+            }
+            bufferCtx.fill();
+
+            ctx.globalCompositeOperation = "source-over";
+            ctx.filter = "none";
+            ctx.fillStyle = "#000000";
+            ctx.fillRect(0, 0, stageWidth, stageHeight);
+
+            ctx.drawImage(bufferCanvas, 0, 0);
+
+            ctx.globalCompositeOperation = "screen";
+            ctx.filter = "blur(20px)";
+            ctx.drawImage(bufferCanvas, 0, 0);
+
+            ctx.filter = "none";
+            ctx.globalCompositeOperation = "source-over";
+
+            requestAnimationFrame(onLoop);
+        }
+
+        requestAnimationFrame(onLoop);
+    </script>
+</body>
+</html>
