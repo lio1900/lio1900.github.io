@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>나의 포트폴리오</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Noto+Sans+KR:wght@300;400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- 기본 설정 --- */
+        :root {
+            --text-main: #333333;
+            --text-sub: #555555;
+            --accent-color: #2c3e50;
+            --glass-bg: rgba(255, 255, 255, 0.75); /* 반투명 배경색 */
+            --glass-border: 1px solid rgba(255, 255, 255, 0.8);
+            --shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            color: var(--text-main);
+            line-height: 1.6;
+            overflow-x: hidden;
+            background-color: #f0f2f5; /* 캔버스 로딩 전 기본 배경색 */
+        }
+
+        /* --- 배경 캔버스 스타일 (Attraction Cursor) --- */
+        #canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1; /* 콘텐츠보다 뒤로 보내기 */
+            pointer-events: none; /* 마우스 클릭이 콘텐츠에 닿도록 설정 */
+        }
+
+        /* --- 콘텐츠 래퍼 (배경 위에 뜨는 내용) --- */
+        #app-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        /* --- 네비게이션 --- */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.85); /* 더 투명하게 */
+            backdrop-filter: blur(10px); /* 블러 효과 */
+            z-index: 1000;
+            border-bottom: var(--glass-border);
+        }
+
+        nav {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 1rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: var(--accent-color);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .nav-links a {
+            font-size: 0.95rem;
+            color: var(--text-sub);
+            transition: color 0.3s;
+            font-weight: 500;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent-color);
+        }
+
+        /* --- 섹션 공통 --- */
+        section {
+            padding: 6rem 1.5rem; /* 헤더 공간 고려하여 패딩 조정 */
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            margin-bottom: 2rem;
+            color: var(--accent-color);
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+        }
+
+        /* --- 소개 (About) --- */
+        #about {
+            min-height: 90vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .about-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            border: var(--glass-border);
+            box-shadow: var(--shadow);
+            border-radius: 20px;
+            padding: 3rem;
+            display: flex;
+            align-items: center;
+            gap: 3rem;
+            width: 100%;
+        }
+
+        .about-text {
+            flex: 1;
+        }
+
+        .about-text h1 {
+            font-size: 2.2rem;
+            margin-bottom: 1rem;
+            line-height: 1.3;
+        }
+
+        .about-text p {
+            color: var(--text-sub);
+            margin-bottom: 1.5rem;
+        }
+
+        .profile-img-placeholder {
+            width: 250px;
+            height: 250px;
+            background-color: rgba(200, 200, 200, 0.3);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #777;
+            font-size: 0.9rem;
+            border: 2px dashed #bbb;
+            flex-shrink: 0;
+            overflow: hidden;
+        }
+
+        .profile-img-placeholder img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* --- 기술 (Skills) --- */
+        .skills-container {
+            background: var(--glass-bg);
+            backdrop-filter: blur(8px);
+            border-radius: 20px;
+            padding: 2rem;
+            border: var(--glass-border);
+            box-shadow: var(--shadow);
+        }
+
+        .skills-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .skill-tag {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 0.8rem 1.5rem;
+            border-radius: 50px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            font-weight: 500;
+            color: var(--accent-color);
+            transition: transform 0.2s;
+        }
+        
+        .skill-tag:hover {
+            transform: scale(1.05);
+        }
+
+        /* --- 프로젝트 (Projects) --- */
+        .project-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .project-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(8px);
+            border: var(--glass-border);
+            box-shadow: var(--shadow);
+            border-radius: 15px;
+            padding: 2rem;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .project-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        .project-title {
+            font-size: 1.25rem;
+            margin-bottom: 0.8rem;
+            font-weight: 700;
+        }
+
+        .project-desc {
+            font-size: 0.95rem;
+            color: var(--text-sub);
+            margin-bottom: 1.5rem;
+        }
+
+        .project-link {
+            display: inline-block;
+            font-size: 0.9rem;
+            color: var(--accent-color);
+            border-bottom: 1px solid var(--accent-color);
+            padding-bottom: 2px;
+        }
+
+        /* --- 연락처 (Contact) --- */
+        #contact {
+            text-align: center;
+            padding: 8rem 1.5rem;
+        }
+
+        .contact-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(8px);
+            padding: 3rem;
+            border-radius: 20px;
+            border: var(--glass-border);
+            display: inline-block;
+        }
+
+        .btn-contact {
+            display: inline-block;
+            background-color: var(--accent-color);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background 0.3s;
+            margin-top: 1rem;
+        }
+
+        .btn-contact:hover {
+            background-color: #1a252f;
+        }
+
+        /* --- 푸터 및 버튼 컨트롤 --- */
+        footer {
+            text-align: center;
+            padding: 2rem;
+            font-size: 0.8rem;
+            color: #777;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* 디자인 레퍼런스의 버튼 스타일 (하단 고정) */
+        .effect-controls {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 100;
+        }
+
+        .effect-btn {
+            font-family: "Montserrat", sans-serif;
+            font-size: 12px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 20px;
+            border: 1px solid #ccc;
+            padding: 8px 16px;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: all 0.2s;
+        }
+
+        .effect-btn:hover {
+            background: white;
+            transform: scale(1.05);
+        }
+
+        /* --- 반응형 미디어 쿼리 --- */
+        @media (max-width: 768px) {
+            .about-card {
+                flex-direction: column-reverse;
+                text-align: center;
+                padding: 2rem;
+            }
+
+            .profile-img-placeholder {
+                width: 180px;
+                height: 180px;
+            }
+
+            .nav-links {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="canvas"></canvas>
+
+    <div id="app-content">
+        <header>
+            <nav>
+                <div class="logo">PORTFOLIO</div>
+                <ul class="nav-links">
+                    <li><a href="#about">소개</a></li>
+                    <li><a href="#skills">기술</a></li>
+                    <li><a href="#projects">프로젝트</a></li>
+                    <li><a href="#contact">연락처</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <section id="about">
+            <div class="about-card">
+                <div class="about-text">
+                    <h1>Hello,<br>I'm a Web Developer.</h1>
+                    <p>
+                        사용자 경험을 중요하게 생각하며 깔끔한 코드를 작성하는 개발자입니다.<br>
+                        모던한 디자인과 인터랙티브한 웹 환경에 관심이 많습니다.
+                    </p>
+                </div>
+                <div class="profile-img-placeholder">
+                    <span>Profile Image</span>
+                </div>
+            </div>
+        </section>
+
+        <section id="skills">
+            <h2 class="section-title">Skills</h2>
+            <div class="skills-container">
+                <div class="skills-grid">
+                    <div class="skill-tag">HTML5</div>
+                    <div class="skill-tag">CSS3</div>
+                    <div class="skill-tag">JavaScript</div>
+                    <div class="skill-tag">React</div>
+                    <div class="skill-tag">Git</div>
+                    <div class="skill-tag">Three.js</div>
+                </div>
+            </div>
+        </section>
+
+        <section id="projects">
+            <h2 class="section-title">Projects</h2>
+            <div class="project-grid">
+                <div class="project-card">
+                    <h3 class="project-title">Interactive Portfolio</h3>
+                    <p class="project-desc">현재 보고 계신 사이트입니다. Three.js를 활용한 파티클 효과와 Glassmorphism 디자인을 적용했습니다.</p>
+                    <a href="#" class="project-link">View Code &rarr;</a>
+                </div>
+                <div class="project-card">
+                    <h3 class="project-title">To-Do Web App</h3>
+                    <p class="project-desc">로컬 스토리지를 활용한 일정 관리 앱입니다. CRUD 기능을 바닐라 자바스크립트로 구현했습니다.</p>
+                    <a href="#" class="project-link">View Code &rarr;</a>
+                </div>
+                <div class="project-card">
+                    <h3 class="project-title">Weather Dashboard</h3>
+                    <p class="project-desc">OpenWeather API를 연동하여 전 세계 날씨 정보를 실시간으로 보여주는 대시보드입니다.</p>
+                    <a href="#" class="project-link">Live Demo &rarr;</a>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact">
+            <div class="contact-card">
+                <h2 class="section-title" style="margin-bottom: 1rem;">Contact Me</h2>
+                <p style="color: #666; margin-bottom: 2rem;">협업 제안이나 궁금한 점은 언제든 메일 주세요.</p>
+                <a href="mailto:email@example.com" class="btn-contact">Send Email</a>
+            </div>
+        </section>
+
+        <footer>
+            <p>&copy; 2024 My Portfolio. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <div class="effect-controls">
+        <button type="button" id="colors-btn" class="effect-btn">
+            ✨ Change Colors
+        </button>
+    </div>
+
+    <script type="module">
+        import AttractionCursor from "https://cdn.jsdelivr.net/npm/threejs-components@0.0.26/build/cursors/attraction1.min.js";
+
+        const app = AttractionCursor(document.getElementById('canvas'), {
+            particles: {
+                attractionIntensity: 0.75, // 당기는 힘
+                size: 1.5, // 입자 크기
+                color: "#2c3e50" // 기본 입자 색상 (네이비 톤으로 변경하여 밝은 배경에서 보이게 함)
+            },
+        });
+
+        const button1 = document.getElementById('colors-btn');
+
+        button1.addEventListener('click', () => {
+            // 랜덤 색상 부여
+            app.particles.light1.color.set(Math.random() * 0xffffff);
+            app.particles.light2.color.set(Math.random() * 0xffffff);
+        });
+    </script>
+</body>
+</html>
