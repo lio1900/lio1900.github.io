@@ -73,13 +73,25 @@
       padding-left:6px;
       min-width: 170px;
     }
+
+    /* ✅ 프로필 이미지(상단) */
     .avatar{
       width: 34px;
       height: 34px;
       border-radius: 12px;
-      background: linear-gradient(135deg, rgba(124,92,255,1), rgba(46,233,166,1));
-      box-shadow: 0 10px 30px rgba(124,92,255,.25);
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      box-shadow: 0 10px 30px rgba(124,92,255,.18);
+      flex: 0 0 auto;
     }
+    .avatar img{
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display:block;
+    }
+
     .brand .name{
       font-weight: 700;
       letter-spacing: .2px;
@@ -209,6 +221,31 @@
       width: 8px; height: 8px; border-radius: 999px;
       background: var(--accent2);
       box-shadow: 0 0 0 6px rgba(46,233,166,.12);
+    }
+
+    /* ✅ 히어로 프로필 사진(큰) */
+    .hero-head{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:16px;
+      flex-wrap: wrap;
+    }
+    .hero-photo{
+      width: 72px;
+      height: 72px;
+      border-radius: 18px;
+      overflow:hidden;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      box-shadow: 0 18px 60px rgba(0,0,0,.25);
+      flex: 0 0 auto;
+    }
+    .hero-photo img{
+      width:100%;
+      height:100%;
+      object-fit: cover;
+      display:block;
     }
 
     h1{
@@ -380,6 +417,14 @@
     @media (prefers-reduced-motion: reduce){
       *{ transition:none !important; scroll-behavior:auto !important; }
     }
+
+    /* Print: 상단바 숨기고 카드 여백 조정(선택) */
+    @media print{
+      body{ background: #fff !important; color:#111 !important; }
+      .topbar{ display:none !important; }
+      .card{ box-shadow:none !important; border:1px solid #ddd !important; background:#fff !important; }
+      a{ text-decoration:none !important; color:#111 !important; }
+    }
   </style>
 </head>
 
@@ -387,7 +432,10 @@
   <div class="wrap">
     <header class="topbar" aria-label="상단 내비게이션">
       <a class="brand" href="#top" aria-label="홈으로">
-        <div class="avatar" aria-hidden="true"></div>
+        <div class="avatar" aria-hidden="true">
+          <!-- ✅ images/TV.jpg -->
+          <img src="images/TV.jpg" alt="프로필 사진" />
+        </div>
         <div>
           <div class="name" id="nameText">Your Name</div>
           <div class="role" id="roleText">Product / Frontend / etc.</div>
@@ -411,7 +459,14 @@
       <!-- Main column -->
       <div class="main">
         <section class="card hero" aria-label="헤더">
-          <div class="kicker"><span class="dot" aria-hidden="true"></span><span id="statusText">현재: 구직중 / 협업가능</span></div>
+          <div class="hero-head">
+            <div class="kicker"><span class="dot" aria-hidden="true"></span><span id="statusText">현재: 구직중 / 협업가능</span></div>
+            <div class="hero-photo" aria-label="프로필 사진">
+              <!-- ✅ images/TV.jpg -->
+              <img src="images/TV.jpg" alt="프로필 사진" />
+            </div>
+          </div>
+
           <h1>
             <span id="headlineName">Your Name</span><br />
             <span style="color: rgba(255,255,255,.78);" id="headlineRole">모던하고 단단한 제품을 만드는 사람</span>
