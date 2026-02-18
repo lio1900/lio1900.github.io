@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio | Boxed Space</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.0/lucide.min.js"></script>
+    <style>
+        :root {
+            --glass: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --text: #ffffff;
+            --accent: #aef;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            background: #000;
+            color: var(--text);
+            font-family: 'Pretendard', system-ui, sans-serif;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Shader Canvas Fixed Background */
+        #canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            filter: brightness(0.6);
+        }
+
+        /* Layout */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 1.5rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.5), transparent);
+        }
+
+        .logo { font-weight: 800; font-size: 1.2rem; letter-spacing: 1px; }
+        .nav-links { display: flex; gap: 2rem; list-style: none; }
+        .nav-links a { text-decoration: none; color: #ccc; font-size: 0.9rem; transition: 0.3s; }
+        .nav-links a:hover { color: var(--accent); }
+
+        main {
+            position: relative;
+            z-index: 1;
+            padding: 0 5%;
+        }
+
+        section {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 100px 0;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        /* Glassmorphism Cards */
+        .glass-card {
+            background: var(--glass);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 3rem;
+            margin-top: 2rem;
+        }
+
+        h1 { font-size: clamp(2.5rem, 8vw, 4rem); line-height: 1.2; margin-bottom: 1.5rem; }
+        h2 { font-size: 2rem; margin-bottom: 2rem; color: var(--accent); }
+
+        /* Projects */
+        .project-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
+        .project-item {
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 16px;
+            border: 1px solid var(--glass-border);
+            transition: 0.3s;
+        }
+        .project-item:hover { transform: translateY(-5px); background: rgba(255, 255, 255, 0.08); }
+
+        /* Timeline */
+        .timeline-item { margin-bottom: 2rem; padding-left: 1.5rem; border-left: 2px solid var(--accent); }
+        .date { font-size: 0.8rem; color: var(--accent); opacity: 0.8; }
+
+        /* Contact */
+        .contact-links { display: flex; gap: 2rem; flex-wrap: wrap; margin-top: 1rem; }
+        .contact-links a { display: flex; align-items: center; gap: 0.5rem; color: #fff; text-decoration: none; opacity: 0.7; transition: 0.3s; }
+        .contact-links a:hover { opacity: 1; color: var(--accent); }
+
+        /* Hide Editor UI but keep functionality for background */
+        #controls, #codeEditor, #error, #indicator { display: none; }
+
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .glass-card { padding: 2rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo">DEV.LOG</div>
+        <ul class="nav-links">
+            <li><a href="#home">Profile</a></li>
+            <li><a href="#projects">Projects</a></li>
+            <li><a href="#experience">Experience</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
+
+    <canvas id="canvas"></canvas>
+    <textarea id="codeEditor"></textarea>
+    <div id="controls"><input id="btnToggleView" type="checkbox"><input id="btnToggleResolution" type="checkbox"><input id="btnReset" type="checkbox"></div>
+    <div id="error"></div><div id="indicator"></div>
+
+    <main>
+        <section id="home">
+            <h1>Creative<br><span style="color: var(--accent)">Developer</span></h1>
+            <div class="glass-card">
+                <p style="font-size: 1.2rem; color: #ddd;">
+                    안녕하세요, 코드와 디자인의 경계를 허무는 개발자 홍길동입니다.<br>
+                    공간감을 주는 인터랙티브 웹과 효율적인 아키텍처 구축에 관심이 많습니다.
+                </p>
+            </div>
+        </section>
+
+        <section id="projects">
+            <h2>Featured Projects</h2>
+            <div class="project-grid">
+                <div class="project-item">
+                    <h3>01. Space UI Design</h3>
+                    <p>WebGL을 활용한 인터랙티브 3D 웹 인터페이스 프로젝트입니다.</p>
+                </div>
+                <div class="project-item">
+                    <h3>02. Data Vision</h3>
+                    <p>복잡한 데이터를 시각화하여 대시보드로 구현한 협업 툴입니다.</p>
+                </div>
+                <div class="project-item">
+                    <h3>03. Minimal Template</h3>
+                    <p>오픈소스 기반의 미니멀 웹 템플릿 제작 및 배포.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="experience">
+            <h2>Experience</h2>
+            <div class="glass-card">
+                <div class="timeline-item">
+                    <div class="date">2024 - PRESENT</div>
+                    <h3>Senior Frontend Engineer</h3>
+                    <p>Next.js 기반의 대규모 서비스 프론트엔드 설계 및 성능 최적화.</p>
+                </div>
+                <div class="timeline-item" style="margin-bottom: 0;">
+                    <div class="date">2022 - 2023</div>
+                    <h3>Junior Web Developer</h3>
+                    <p>다양한 마케팅 페이지 및 인터랙티브 웹 모듈 개발.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact">
+            <h2>Get In Touch</h2>
+            <div class="glass-card">
+                <p style="margin-bottom: 1.5rem;">새로운 프로젝트 제안이나 협업 문의는 언제나 환영입니다.</p>
+                <div class="contact-links">
+                    <a href="mailto:hello@example.com"><i data-lucide="mail"></i> Email</a>
+                    <a href="#"><i data-lucide="github"></i> GitHub</a>
+                    <a href="#"><i data-lucide="linkedin"></i> LinkedIn</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer style="padding: 4rem 0; text-align: center; opacity: 0.5; font-size: 0.8rem;">
+        © 2026 Designed with Shader Art.
+    </footer>
+
+    <script type="x-shader/x-fragment" id="fragmentShader">#version 300 es
+    precision highp float;
+    out vec4 O;
+    uniform float time;
+    uniform vec2 resolution;
+    uniform vec2 touch;
+    uniform int pointerCount;
+    uniform vec2[10] pointers;
+    #define MN min(resolution.x,resolution.y)
+    #define T time
+    #define rot(a) mat2(cos((a)-vec4(0,11,33,0)))
+    
+    float tor(vec3 p, vec2 s) {
+        vec2 c=vec2(length(p.xy)-s.x,p.z);
+        return length(c)-s.y;
+    }
+    vec2 map(vec3 p) {
+        vec3 q=p;
+        p.yz*=rot(-T*.3);
+        p.xz*=rot(T*.2);
+        vec2 a=vec2(abs(tor(p,vec2(1.2,.3)))-.01,1);
+        vec2 b=vec2(abs(length(q)-8.)-.05,0);
+        return a.x<b.x?a:b;
+    }
+    void main() {
+        vec2 uv=(gl_FragCoord.xy-.5*resolution)/MN;
+        vec3 col=vec3(0), p=vec3(0,0,-3.), rd=normalize(vec3(uv,1.));
+        float dd=.0, at=.0;
+        for (float i=.0; i<80.; i++) {
+            vec2 d=map(p);
+            if (abs(d.x)<1e-3) break;
+            p+=rd*d.x;
+            dd+=d.x;
+            at+=.02*(.02/dd);
+        }
+        col+=at*vec3(0.5, 0.8, 1.0);
+        O=vec4(col,1);
+    }</script>
+
+    <script>
+        // Lucide Icons
+        lucide.createIcons();
+
+        // Minimal Shader Renderer for Background
+        const canvas = document.getElementById('canvas');
+        const gl = canvas.getContext('webgl2');
+        const source = document.getElementById('fragmentShader').textContent;
+
+        let program, vao, timeLoc, resLoc;
+
+        function createShader(gl, type, src) {
+            const s = gl.createShader(type);
+            gl.shaderSource(s, src);
+            gl.compileShader(s);
+            return s;
+        }
+
+        function init() {
+            const vs = createShader(gl, gl.VERTEX_SHADER, `#version 300 es
+                in vec4 position;
+                void main() { gl_Position = position; }`);
+            const fs = createShader(gl, gl.FRAGMENT_SHADER, source);
+            program = gl.createProgram();
+            gl.attachShader(program, vs);
+            gl.attachShader(program, fs);
+            gl.linkProgram(program);
+
+            const vertices = new Float32Array([-1,1, -1,-1, 1,1, 1,-1]);
+            const buffer = gl.createBuffer();
+            gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+            gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW);
+
+            const posLoc = gl.getAttribLocation(program, "position");
+            vao = gl.createVertexArray();
+            gl.bindVertexArray(vao);
+            gl.enableVertexAttribArray(posLoc);
+            gl.vertexAttribPointer(posLoc, 2, gl.FLOAT, false, 0, 0);
+
+            timeLoc = gl.getUniformLocation(program, "time");
+            resLoc = gl.getUniformLocation(program, "resolution");
+        }
+
+        function render(now) {
+            if (canvas.width !== innerWidth || canvas.height !== innerHeight) {
+                canvas.width = innerWidth; canvas.height = innerHeight;
+                gl.viewport(0, 0, canvas.width, canvas.height);
+            }
+            gl.useProgram(program);
+            gl.bindVertexArray(vao);
+            gl.uniform1f(timeLoc, now * 0.001);
+            gl.uniform2f(resLoc, canvas.width, canvas.height);
+            gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+            requestAnimationFrame(render);
+        }
+
+        init();
+        render(0);
+
+        // Smooth Scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>
